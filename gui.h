@@ -1,6 +1,7 @@
 #include "raylib.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 typedef struct GuiRectangle{
   int x;
@@ -85,6 +86,37 @@ GuiElement* InitGuiFromEnum(char type, int numOfElements, int vertical, int hori
 
 void GuiListener(void(*handler)(size_t action)); //build later
 
+void GuiDrawTextInBox(char* text, int originX, int originY, int width, int height)
+{
+    Rectangle box = { originX, originY, width, height };
+    Font font = GetFontDefault();
+    float maxHeight = (float)height;
+    int fontSize;
+    for (fontSize = 1; fontSize <= maxHeight; fontSize++) {
+        Vector2 textSize = MeasureTextEx(font, text, fontSize, 0);
+        if (textSize.y > maxHeight) break;
+    }
+    fontSize--;
+
+    float maxWidth = (float)width;
+    char newText[TextLength(text)+1];
+    strcpy(newText, text);
+    int i;
+    Vector2 textSize; 
+    for(i = TextLength(text); i > 0; i--)
+    {
+      textSize = MeasureTextEx(font, newText, fontSize, 1);
+      if(textSize.x < maxWidth) break;
+      newText[i-1] = '.';
+      newText[i-2] = '.';
+      newText[i] = '\0';
+    }
+
+    Vector2 origin = { (float)originX, (float)originY };
+    origin.x = origin.x + (maxWidth-textSize.x)/2;
+    DrawTextEx(font, newText, origin, fontSize, 1, BLACK);
+}   
+
 void DrawElement(GuiElement ge, GuiElementArrayHeader head)
 {
   int ElementHeight;
@@ -108,7 +140,8 @@ void DrawElement(GuiElement ge, GuiElementArrayHeader head)
   exit(EXIT_FAILURE);
   }
   DrawRectangle(OriginX, OriginY, ElementWidth, ElementHeight, ge.borderColor);
-  DrawRectangle(OriginX+ElementWidth*(((float)ge.border)/200), OriginY+ElementHeight*(((float)ge.border)/200), ElementWidth*(1.0-((float)ge.border)/100),ElementHeight*(1.0-((float)ge.border)/100), ge.color);
+  DrawRectangle(OriginX+ElementWidth*(((float)ge.border)/200), OriginY+ElementHeight*(((float)ge.border)/200), ElementWidth*(1.0-((float)ge.border)/100), ElementHeight*(1.0-((float)ge.border)/100), ge.color);
+  GuiDrawTextInBox(ge.text, OriginX+ElementWidth*(((float)ge.border)/200), OriginY+ElementHeight*(((float)ge.border)/200),  ElementWidth*(1.0-((float)ge.border)/100), ElementHeight*(1.0-((float)ge.border)/100));
 }
 
 #endif
