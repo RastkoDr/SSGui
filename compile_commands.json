@@ -1,0 +1,15 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-c",
+      "-DGUI_IMPLEMENTATION",
+      "-o",
+      "main",
+      "main.c"
+    ],
+    "directory": "/home/rale/Documents/cProj/gui",
+    "file": "/home/rale/Documents/cProj/gui/main.c",
+    "output": "/home/rale/Documents/cProj/gui/main"
+  }
+]
