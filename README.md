@@ -1,4 +1,4 @@
-# In development
+# In very early development
 ---
 # Description
 SuperSimple Gui is a library that helps you make a Gui for you program fast. 
