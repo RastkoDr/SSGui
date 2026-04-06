@@ -18,6 +18,7 @@ typedef struct GuiElement{
   Color color; //primary color
   Color borderColor;
   size_t name;
+  Color textColor;
 } GuiElement;
 
 typedef struct GuiElementArrayHeader{
@@ -36,6 +37,11 @@ GuiElementArrayHeader* GetHead(GuiElement* array);
 GuiElement* PushGuiElement(GuiElement ge, GuiElement* array);
 
 GuiElement* InitGuiFromEnum(char type, int numOfElements, int vertical, int horizontal, int BorderSize);
+
+void GuiDrawTextInBox(char* text, int originX, int originY, int width, int height, Color TextColor);
+
+void DrawElement(GuiElement ge, GuiElementArrayHeader head);
+
 #if defined(GUI_IMPLEMENTATION)
 
 GuiElement* InitGuiElementArray(char type, int vertical, int horizontal)
@@ -79,14 +85,14 @@ GuiElement* InitGuiFromEnum(char type, int numOfElements, int vertical, int hori
   for(int i = 0; i < numOfElements; i++)
   {
     //array = PushGuiElement((GuiElement){(GuiRectangle){i, i, 1, 1}, BorderSize, 'b', "", 0, 255, i}, array);
-    array = PushGuiElement((GuiElement){(GuiRectangle){i, 0, 1, 1}, BorderSize, 'b', "", 0, 0, 0}, array);
+    array = PushGuiElement((GuiElement){(GuiRectangle){i, 0, 1, 1}, BorderSize, 'b', "", 0, 0, 0, 0}, array);
   }
   return array;
 }
 
 void GuiListener(void(*handler)(size_t action)); //build later
 
-void GuiDrawTextInBox(char* text, int originX, int originY, int width, int height)
+void GuiDrawTextInBox(char* text, int originX, int originY, int width, int height, Color textColor)
 {
     Rectangle box = { originX, originY, width, height };
     Font font = GetFontDefault();
@@ -114,7 +120,7 @@ void GuiDrawTextInBox(char* text, int originX, int originY, int width, int heigh
 
     Vector2 origin = { (float)originX, (float)originY };
     origin.x = origin.x + (maxWidth-textSize.x)/2;
-    DrawTextEx(font, newText, origin, fontSize, 1, BLACK);
+    DrawTextEx(font, newText, origin, fontSize, 1, textColor);
 }   
 
 void DrawElement(GuiElement ge, GuiElementArrayHeader head)
@@ -141,7 +147,7 @@ void DrawElement(GuiElement ge, GuiElementArrayHeader head)
   }
   DrawRectangle(OriginX, OriginY, ElementWidth, ElementHeight, ge.borderColor);
   DrawRectangle(OriginX+ElementWidth*(((float)ge.border)/200), OriginY+ElementHeight*(((float)ge.border)/200), ElementWidth*(1.0-((float)ge.border)/100), ElementHeight*(1.0-((float)ge.border)/100), ge.color);
-  GuiDrawTextInBox(ge.text, OriginX+ElementWidth*(((float)ge.border)/200), OriginY+ElementHeight*(((float)ge.border)/200),  ElementWidth*(1.0-((float)ge.border)/100), ElementHeight*(1.0-((float)ge.border)/100));
+  GuiDrawTextInBox(ge.text, OriginX+ElementWidth*(((float)ge.border)/200), OriginY+ElementHeight*(((float)ge.border)/200),  ElementWidth*(1.0-((float)ge.border)/100), ElementHeight*(1.0-((float)ge.border)/100), BLACK);
 }
 
 #endif
