@@ -90,7 +90,15 @@ GuiElement* InitGuiFromEnum(char type, int numOfElements, int vertical, int hori
   return array;
 }
 
-void GuiListener(void(*handler)(size_t action)); //build later
+void GuiListener(void(*handler)(size_t action))
+{
+  if(!IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
+      return;
+  Vector2 position = GetMousePosition();
+  printf("Mouse position = %f %f \n", position.x, position.y);
+
+}
+
 
 void GuiDrawTextInBox(char* text, int originX, int originY, int width, int height, Color textColor)
 {
